@@ -1,0 +1,51 @@
+{
+  "name": "<%= name %>",
+  "version": "1.0.0",
+  "description": "<%= description %>",
+  "main": "app.js",
+  "author": "<%= author %>",
+  "scripts": {
+    "start": "node bin/www",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "url": "<%= repo %>"
+  },
+  "keywords": [
+    "<%= keywords %>"
+  ],
+  "dependencies": {
+    "debug": "^2.6.3",
+    "fs-extra": "^2.1.2",
+    "iconv-lite": "^0.4.15",
+    "jade": "~1.11.0",
+    "jimp": "^0.2.27",
+    "koa": "^2.2.0",
+    "koa-better-body": "^3.0.2",
+    "koa-convert": "^1.2.0",
+    "koa-jwt": "^3.2.1",
+    "koa-logger": "^2.0.1",
+    "koa-onerror": "^1.2.1",
+    "koa-router": "^7.0.1",
+    "koa-static": "^3.0.0",
+    "koa2-cors": "^2.0.3",<% if (includeWebsocket) { %>
+    "rxjs": "^5.4.2",
+    "websocket": "^1.0.25",
+    "ws": "^3.3.2",<% } %>
+    "lodash": "^4.17.4",
+    "log4js": "^1.1.1",
+    "moment": "^2.18.1",
+    "mysql": "^2.13.0",
+    "node-schedule": "^1.2.1",
+    "request-promise": "^4.2.0",
+    "sequelize": "^3.30.4",
+    "socket.io": "^1.7.3",
+    "tencentyoutuyun": "^1.0.0",
+    "uuid": "^3.0.1"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "mocha": "^3.2.0",
+    "nodemon": "^1.8.1",
+    "request": "^2.81.0"
+  },
+  "license": "<%= license %>"
+}

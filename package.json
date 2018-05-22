@@ -1,0 +1,28 @@
+{
+  "name": "generator-nodemicrosevice",
+  "version": "1.0.0",
+  "description": "基于nodemicrosevice的项目目录快速生成器",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/visaia/generator-nodemicrosevice.git"
+  },
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "author": "viaia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/visaia/generator-nodemicrosevice/issues"
+  },
+  "homepage": "https://github.com/visaia/generator-nodemicrosevice#readme",
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "yeoman-generator": "^2.0.5",
+    "yosay": "^2.0.2"
+  },
+  "devDependencies": {}
+}

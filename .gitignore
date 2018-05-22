@@ -1,0 +1,8 @@
+node_modules
+logs
+test/
+package-lock.json
+build
+.idea
+.vscode
+.rar

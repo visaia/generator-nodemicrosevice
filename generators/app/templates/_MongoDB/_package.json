@@ -1,0 +1,41 @@
+{
+  "name": "<%= name %>",
+  "version": "1.0.0",
+  "description": "<%= description %>",
+  "main": "app.js",
+  "author": "<%= author %>",
+  "scripts": {
+    "start": "node bin/www",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "url": "<%= repo %>"
+  },
+  "keywords": [
+    "<%= keywords %>"
+  ],
+  "dependencies": {
+    "fs-extra": "^2.1.2",
+    "jimp": "^0.2.28",
+    "koa": "^2.2.0",
+    "koa-better-body": "^3.0.2",
+    "koa-bodyparser": "^3.2.0",
+    "koa-convert": "^1.2.0",
+    "koa-json": "^2.0.2",
+    "koa-onerror": "^1.2.1",
+    "koa-router": "^7.0.1",
+    "koa2-cors": "^2.0.3",<% if (includeWebsocket) { %>
+    "rxjs": "^5.4.2",
+    "websocket": "^1.0.25",
+    "ws": "^3.3.2",<% } %>
+    "lodash": "^4.17.4",
+    "log4js": "^1.1.1",
+    "moment": "^2.21.0",
+    "mongoose": "^4.12.4",
+    "request-promise": "^4.2.2",
+    "uuid": "^3.1.0"
+  },
+  "devDependencies": {
+    "mocha": "^3.2.0",
+    "webpack": "^4.2.0"
+  },
+  "license": "<%= license %>"
+}
