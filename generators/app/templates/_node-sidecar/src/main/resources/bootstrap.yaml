@@ -1,0 +1,22 @@
+server:
+  port: <%= sidecarProt %>
+spring:
+  application:
+    name: <%= sidecar %>
+#  cloud:
+#    config:
+##      uri: http://core-config:9999
+#      discovery:
+#        enabled: true
+#        serviceId: core-config
+#        
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://core-eureka:9000/eureka/   
+  instance:
+    prefer-ip-address: true
+sidecar:
+  port: 3001
+  home-page-uri: http://<%= name %>:${sidecar.port}/
+  health-uri: http://<%= name %>:${sidecar.port}/health

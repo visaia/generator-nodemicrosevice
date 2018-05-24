@@ -26,14 +26,19 @@ module.exports = class extends Generator {
         this.author = '';
         var prompts = [
             {
-                type: 'input',
-                name: 'name',
-                message: 'name of app:', default: this.name
-            },
-            {
-                type: 'input',
-                name: 'description',
-                message: 'description:', default: this.description
+                type: 'checkbox',
+                name: 'features',
+                message: '选择是否添加websocket和sidecar',
+                choices: [{
+                    name: 'websocket',
+                    value: 'includeWebsocket',
+                    checked: true
+                },
+                    {
+                        name: 'sidecar',
+                        value: 'includesidecar',
+                        checked: true
+                    }]
             },
             {
                 type: 'list',   // 提供选择的列表
@@ -51,14 +56,50 @@ module.exports = class extends Generator {
                 ]
             },
             {
-                type: 'checkbox',
-                name: 'features',
-                message: 'is the websocket would you like to include?',
-                choices: [{
-                    name: 'websocket',
-                    value: 'includeWebsocket',
-                    checked: true
-                }]
+                type: 'input',
+                name: 'name',
+                message: 'name of app:',
+                validate: answers => {
+                    if (answers) {
+                        return true;
+                    }
+
+                    return '不能为空';
+                }
+            },
+            {
+                type: 'input',
+                name: 'description',
+                message: 'description:', default: this.description
+            },
+            {
+                type: 'input',
+                name: 'sidecar',
+                message: 'sidecar name:',
+                validate: answers => {
+                    if (answers) {
+                        return true;
+                    }
+
+                    return '不能为空';
+                },
+                when: answers => answers.features.indexOf('includesidecar') !== -1
+            },
+            {
+                type: 'input',
+                name: 'sidecarProt',
+                message: 'sidecar port:请选择4000~4999之间的端口',
+                validate: answers => {
+                    var pass = answers.match(
+                        /^([4]\d\d\d)$/
+                    );
+                    if (pass) {
+                        return true;
+                    }
+
+                    return '请输入正确的端口号';
+                },
+                when: answers => answers.features.indexOf('includesidecar') !== -1
             },
             {
                 type: 'input',
@@ -73,12 +114,19 @@ module.exports = class extends Generator {
             {
                 type: 'input',
                 name: 'author',
-                message: 'author:', default: this.author
+                message: 'author:', default: 'CW'
             },
             {
                 type: 'input',
                 name: 'keywords',
-                message: 'keywords:', default: this.author
+                message: 'keywords:',
+                validate: answers => {
+                    if (answers) {
+                        return true;
+                    }
+
+                    return '不能为空';
+                }
             }
 
         ];
@@ -94,16 +142,23 @@ module.exports = class extends Generator {
             this.author = props.author;
             this.description = props.description;
             this.keywords = props.keywords;
+            this.sidecar = props.sidecar;
+            this.sidecarProt = props.sidecarProt;
             this.includeWebsocket = hasFeature('includeWebsocket');
+            this.includesidecar = hasFeature('includesidecar');
 
             // done();  //进入下一个生命周期阶段
         });
     }
 
     writing() {      //默认源目录就是生成器的templates目录，目标目录就是执行`yo example`时所处的目录。调用this.template用Underscore模板语法去填充模板文件
-        this.log(this.name);
+        this._writingSQL();
+        this._writingWebsocket();
+        this._writingSidecar();
+    }
+
+    _writingSQL() {
         if (this.SQL) {
-            // this.template('_MongoDB/_package.json', 'package.json');  //
             this.fs.copyTpl(
                 this.templatePath('_MongoDB/_package.json'),
                 this.destinationPath('package.json'),
@@ -116,9 +171,9 @@ module.exports = class extends Generator {
                     description: this.description,
                     keywords: this.keywords,
                     includeWebsocket: this.includeWebsocket,
+                    includesidecar: this.includesidecar,
                 }
             );
-            // this.fs.copy('_MongoDB/_README.md', 'README.md');
             this.fs.copy(
                 this.templatePath('_MongoDB/_README.md'),
                 this.destinationPath('.README.md')
@@ -131,13 +186,19 @@ module.exports = class extends Generator {
                 this.templatePath('_MongoDB/_webpack.config.js'),
                 this.destinationPath('webpack.config.js')
             );
-            this.fs.copy(
+            this.fs.copyTpl(
                 this.templatePath('_MongoDB/_api'),
-                this.destinationPath('api')
+                this.destinationPath('api'),
+                {
+                    includeWebsocket: this.includeWebsocket,
+                }
             );
-            this.fs.copy(
+            this.fs.copyTpl(
                 this.templatePath('_MongoDB/_bin/'),
-                this.destinationPath('bin')
+                this.destinationPath('bin'),
+                {
+                    includeWebsocket: this.includeWebsocket,
+                }
             );
             this.fs.copy(
                 this.templatePath('_MongoDB/_config'),
@@ -159,40 +220,43 @@ module.exports = class extends Generator {
                 this.templatePath('_MongoDB/_utils'),
                 this.destinationPath('utils')
             );
-            // this.fs.copy('_MongoDB/_app.js', 'app.js')
-            // this.fs.copy('_MongoDB/_webpack.config.js', 'webpack.config.js')
-            // this.directory('_MongoDB/_api', 'api');
-            // this.directory('_MongoDB/_bin/', 'bin');
-            // this.directory('_MongoDB/_config', 'config');
-            // this.directory('_MongoDB/_db', 'db');
-            // this.directory('_MongoDB/_models', 'models');
-            // this.directory('_MongoDB/_services', 'services');
-            // this.directory('_MongoDB/_utils', 'utils');
         } else {
-            // this.template('_MySQL/_package.json', 'package.json');  //
             this.fs.copyTpl(
                 this.templatePath('_MySQL/_package.json'),
                 this.destinationPath('package.json'),
-                // {
-                //     includeWebsocket: this.includeWebsocket,
-                // }
+                {
+                    name: this.name,
+                    SQL: this.SQL,
+                    repo: this.repo,
+                    license: this.license,
+                    author: this.author,
+                    description: this.description,
+                    keywords: this.keywords,
+                    includeWebsocket: this.includeWebsocket,
+                    includesidecar: this.includesidecar,
+                }
             );
-
             this.fs.copy(
                 this.templatePath('_MySQL/_README.md'),
                 this.destinationPath('README.md')
             );
             this.fs.copy(
                 this.templatePath('_MySQL/_app.js'),
-                this.destinationPath('app.js')
+                this.destinationPath('app.js'),
             );
-            this.fs.copy(
+            this.fs.copyTpl(
                 this.templatePath('_MySQL/_api'),
-                this.destinationPath('api')
+                this.destinationPath('api'),
+                {
+                    includeWebsocket: this.includeWebsocket,
+                }
             );
-            this.fs.copy(
+            this.fs.copyTpl(
                 this.templatePath('_MySQL/_bin/'),
-                this.destinationPath('bin')
+                this.destinationPath('bin'),
+                {
+                    includeWebsocket: this.includeWebsocket,
+                }
             );
             this.fs.copy(
                 this.templatePath('_MySQL/_config'),
@@ -214,23 +278,10 @@ module.exports = class extends Generator {
                 this.templatePath('_MySQL/_utils'),
                 this.destinationPath('utils')
             );
-
-
-
-            // this.fs.copy('_MySQL/_README.md', 'README.md');
-            // this.fs.copy('_MySQL/_app.js', 'app.js')
-            // this.directory('_MySQL/_api', 'api');
-            // this.directory('_MySQL/_bin/', 'bin');
-            // this.directory('_MySQL/_config', 'config');
-            // this.directory('_MySQL/_sql', 'sql');
-            // this.directory('_MySQL/_models', 'models');
-            // this.directory('_MySQL/_services', 'services');
-            // this.directory('_MySQL/_utils', 'utils');
         }
-
+    }
+    _writingWebsocket() {
         if (this.includeWebsocket) {
-            // this.directory('_WebSocket/_common', 'common');
-            // this.directory('_WebSocket/_ipc', 'ipc');
             this.fs.copy(
                 this.templatePath('_WebSocket/_common'),
                 this.destinationPath('common')
@@ -247,8 +298,32 @@ module.exports = class extends Generator {
                 this.templatePath('_WebSocket/_services/WSBasicService.js'),
                 this.destinationPath('services/WSBasicService.js')
             );
-            // this.fs.copy('_WebSocket/_config/WSConfig.js', 'config/WSConfig.js');
-            // this.fs.copy('_WebSocket/_services/WSBasicService.js', 'services/WSBasicService.js');
+        }
+    }
+    _writingSidecar() {
+        if(this.includesidecar) {
+            this.fs.copyTpl(
+                this.templatePath('_node-sidecar'),
+                this.destinationPath(this.sidecar),
+                {
+                    includesidecar: this.includesidecar,
+                    sidecar: this.sidecar,
+                    name: this.name,
+                    sidecarProt: this.sidecarProt,
+                }
+            );
+            this.fs.copyTpl(
+                this.templatePath('_sidecar-services/SidecarService.js'),
+                this.destinationPath('services/SidecarService.js'),
+                {
+                    sidecar: this.sidecar,
+                    sidecarProt: this.sidecarProt,
+                }
+            );
+            this.fs.copy(
+                this.templatePath('_health'),
+                this.destinationPath('api/health')
+            );
         }
     }
 
@@ -264,8 +339,8 @@ module.exports = class extends Generator {
         //     })
         //     .on('error');
         this.installDependencies({
-            bower: true,
-            npm: true
+            npm: true,
+            bower: false,
         }).then(() => console.log('Everything is ready!'));
     }
 

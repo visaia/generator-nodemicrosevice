@@ -1,6 +1,7 @@
 const Koa = require('koa');
 const app = new Koa();
 const json = require('koa-json');
+const serve = require('koa-static');
 const onerror = require('koa-onerror');
 //const bodyparser = require('koa-bodyparser')();
 const body = require('koa-better-body');
@@ -20,7 +21,7 @@ app.use(cors({
 app.use(body());
 //app.use(json());
 
-//app.use(serve(__dirname + '/public'));
+app.use(serve(__dirname + '/public'));
 
 
 

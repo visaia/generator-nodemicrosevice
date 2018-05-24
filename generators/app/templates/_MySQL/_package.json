@@ -30,7 +30,8 @@
     "rxjs": "^5.4.2",
     "websocket": "^1.0.25",
     "ws": "^3.3.2",<% } %>
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.4",<% if (includeWebsocket) { %>
+    "isomorphic-fetch": "^2.2.1",<% } %>
     "log4js": "^1.1.1",
     "moment": "^2.18.1",
     "mysql": "^2.13.0",

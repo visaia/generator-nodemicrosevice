@@ -3,7 +3,7 @@ var Sequelize = require('Sequelize');
 const logUtil = require('../utils/LogUtil');
 const config = require('./index');
 //innodb_large_prefix
-var sequelize = new Sequelize(config.dbName, 'cw_one_card', 'cw_one_card123456', {
+var sequelize = new Sequelize(config.dbName, 'root', '123456', {
   host: 'localhost',
   dialect: 'mysql',
   logging: logUtil.dbInfo,

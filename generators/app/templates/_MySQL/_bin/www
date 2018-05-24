@@ -10,7 +10,10 @@ var http = require('http');
 var config = require('../config');
 var logConfig = require('../config/log');
 var fs = require('fs');
-
+<% if(includeWebsocket) { %>
+const servers = require("../ipc/Server");
+const IPCHelper = require("../ipc/IPCHelper");
+<% } %>
 
 /**
  * 确定目录是否存在，如果不存在则创建目录
@@ -40,7 +43,17 @@ var initLogPath = function(){
 }
 
 initLogPath();
+<% if(includeWebsocket) { %>
+/**
+ * 启动websocket服务，前端访问
+ */
+var startSocket = function () {
+    servers.start();
+    IPCHelper.init();
+};
 
+startSocket();
+<% } %>
 
 /**
  * Get port from environment and store in Express.
