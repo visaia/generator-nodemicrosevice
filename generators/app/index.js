@@ -18,12 +18,13 @@ module.exports = class extends Generator {
         //yeoman-generator 模块提供了很多内置的方法供我们调用，如下面的this.log , this.prompt , this.template , this.spawnCommand 等
 
         // Have Yeoman greet the user.
-        this.log(yosay('Welcome to the groundbreaking ' + chalk.red('example') + ' generator!'
+        this.log(yosay('Welcome to the groundbreaking ' + chalk.red('nodemicrosevice') + ' generator!'
         ));
         this.name = path.basename(process.cwd());
         this.license = 'ISC';
         this.description = '';
-        this.author = '';
+        this.repo = '';
+        this.author = 'CW';
         var prompts = [
             {
                 type: 'checkbox',
@@ -58,7 +59,7 @@ module.exports = class extends Generator {
             {
                 type: 'input',
                 name: 'name',
-                message: 'name of app:',
+                message: 'name of project:',
                 validate: answers => {
                     if (answers) {
                         return true;
@@ -114,7 +115,7 @@ module.exports = class extends Generator {
             {
                 type: 'input',
                 name: 'author',
-                message: 'author:', default: 'CW'
+                message: 'author:', default: this.author
             },
             {
                 type: 'input',
