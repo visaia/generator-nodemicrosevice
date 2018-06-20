@@ -14,6 +14,8 @@
 
 安装：
 1. nodejs7.8+;
+1. npm install -g sequelize-auto;
+1. npm install -g mysql;
 2. sequelize-auto -h <%= host %> -d <%= database %> -u <%= user %> -x <%= pass %> -p 3306  // 终端输入此命令，将读取数据库，自动生成相应的models
 3. npm run create; // 根据models文件夹里的文件，动态生成controller, service, router
 4. npm run start;
