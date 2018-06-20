@@ -3,8 +3,8 @@ var Sequelize = require('Sequelize');
 const logUtil = require('../utils/LogUtil');
 const config = require('./index');
 //innodb_large_prefix
-var sequelize = new Sequelize(config.dbName, 'root', '123456', {
-  host: 'localhost',
+var sequelize = new Sequelize(config.dbName, '<%= user %>', '<%= pass %>', {
+  host: '<%= host %>',
   dialect: 'mysql',
   logging: logUtil.dbInfo,
   timezone:'+08:00',

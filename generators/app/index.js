@@ -48,13 +48,65 @@ module.exports = class extends Generator {
                 choices: [
                     {
                         name: 'mongodb',
-                        value: true
+                        value: 'choiceMongodb'
                     },
                     {
                         name: 'MySQL',
-                        value: false
+                        value: 'choiceMySQL'
                     }
                 ]
+            },
+            {
+                type: 'input',
+                name: 'host',
+                message: 'IP/Hostname for the database:',
+                validate: answers => {
+                    if (answers) {
+                        return true;
+                    }
+
+                    return '不能为空';
+                },
+                when: answers => answers.SQL.indexOf('choiceMySQL') !== -1
+            },
+            {
+                type: 'input',
+                name: 'database',
+                message: 'Database name:',
+                validate: answers => {
+                    if (answers) {
+                        return true;
+                    }
+
+                    return '不能为空';
+                },
+                when: answers => answers.SQL.indexOf('choiceMySQL') !== -1
+            },
+            {
+                type: 'input',
+                name: 'user',
+                message: 'Username for database:',
+                validate: answers => {
+                    if (answers) {
+                        return true;
+                    }
+
+                    return '不能为空';
+                },
+                when: answers => answers.SQL.indexOf('choiceMySQL') !== -1
+            },
+            {
+                type: 'input',
+                name: 'pass',
+                message: 'Password for database:',
+                validate: answers => {
+                    if (answers) {
+                        return true;
+                    }
+
+                    return '不能为空';
+                },
+                when: answers => answers.SQL.indexOf('choiceMySQL') !== -1
             },
             {
                 type: 'input',
@@ -138,6 +190,10 @@ module.exports = class extends Generator {
             this.name = props.name;
             // this.pkgName = props.name;
             this.SQL = props.SQL;
+            this.host = props.host;
+            this.database = props.database;
+            this.user = props.user;
+            this.pass = props.pass;
             this.repo = props.repo;
             this.license = props.license;
             this.author = props.author;
@@ -159,7 +215,7 @@ module.exports = class extends Generator {
     }
 
     _writingSQL() {
-        if (this.SQL) {
+        if (this.SQL == 'choiceMongodb') {
             this.fs.copyTpl(
                 this.templatePath('_MongoDB/_package.json'),
                 this.destinationPath('package.json'),
@@ -237,13 +293,23 @@ module.exports = class extends Generator {
                     includesidecar: this.includesidecar,
                 }
             );
-            this.fs.copy(
+            this.fs.copyTpl(
                 this.templatePath('_MySQL/_README.md'),
-                this.destinationPath('README.md')
+                this.destinationPath('README.md'),
+                {
+                    host: this.host,
+                    database: this.database,
+                    user: this.user,
+                    pass: this.pass
+                }
             );
             this.fs.copy(
                 this.templatePath('_MySQL/_app.js'),
                 this.destinationPath('app.js'),
+            );
+            this.fs.copy(
+                this.templatePath('_MySQL/_createAPI.js'),
+                this.destinationPath('createAPI.js'),
             );
             this.fs.copyTpl(
                 this.templatePath('_MySQL/_api'),
@@ -259,9 +325,15 @@ module.exports = class extends Generator {
                     includeWebsocket: this.includeWebsocket,
                 }
             );
-            this.fs.copy(
+            this.fs.copyTpl(
                 this.templatePath('_MySQL/_config'),
-                this.destinationPath('config')
+                this.destinationPath('config'),
+                {
+                    host: this.host,
+                    database: this.database,
+                    user: this.user,
+                    pass: this.pass
+                }
             );
             this.fs.copy(
                 this.templatePath('_MySQL/_sql'),
