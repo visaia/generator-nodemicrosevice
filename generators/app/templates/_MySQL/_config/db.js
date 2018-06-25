@@ -13,10 +13,16 @@ var sequelize = new Sequelize(config.dbName, '<%= user %>', '<%= pass %>', {
     min: 0,
     idle: 10000
   },
+  define: {
+      timestamps:false,
+      freezeTableName: true,
+  },
 
   // SQLite only
   //storage: 'path/to/database.sqlite'
 });
+
+sequelize.sync({force: false});
 
 function getStore(){
   return sequelize;

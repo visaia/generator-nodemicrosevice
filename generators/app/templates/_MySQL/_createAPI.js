@@ -9,6 +9,9 @@ let init = function() {
     fsUtil.readdir(models).then(files => {
         // console.log(files);
         for(let file of files) {
+            if ('Models.js' == file){//filter Models
+                continue;
+            }
             let modelname = file.replace(/\.js$/g,"");
             let dirname = modelname.replace(/\_/g,"").toLocaleLowerCase();
             let api = path.join(__dirname, "./api", dirname);
@@ -38,10 +41,13 @@ let init = function() {
 function createService(api, file, filename, modelname) {
 
     let tempService = `const BasicService = require('../../services/BasicService');
-const ${modelname} = require('../../models/${modelname}');
+const Sequelize = require('Sequelize');
+const db = require('../../config/db');
+const store = db.getStore();
+const ${modelname} = require('../../models/${modelname}')(store, Sequelize);
 class ${filename}Service extends BasicService{
   constructor(){
-    super(${modelname});
+    super('${modelname}');
   }
 }
 module.exports = new ${filename}Service();`;
@@ -64,7 +70,7 @@ class ${filename}Controller {
         try {
             let params = ctx.request.fields;
             let result = await ${filename}Service.create(params);
-            ctx.body = rsUtil.ok(result);
+            ctx.body = RSUtil.ok(result);
         } catch (error) {
             errorUtil.responseError(ctx,error,"添加失败");
         }
@@ -73,8 +79,8 @@ class ${filename}Controller {
     async delete(ctx){
         try {
             let id = ctx.params.id;
-            let result = await ${filename}Service.remove({id:id});
-            ctx.body = rsUtil.ok(result);
+            let result = await ${filename}Service.destroy(id);
+            ctx.body = RSUtil.ok(result);
         } catch (error) {
             errorUtil.responseError(ctx,error,"删除失败");
         }
@@ -84,7 +90,7 @@ class ${filename}Controller {
         try {
             let params = ctx.request.fields;
             let result = await ${filename}Service.update(params);
-            ctx.body = rsUtil.ok(result);
+            ctx.body = RSUtil.ok(result);
         } catch (error) {
             errorUtil.responseError(ctx,error,"更新失败");
         }
@@ -93,8 +99,8 @@ class ${filename}Controller {
     async findById(ctx){
         try {
             let id = ctx.params.id;
-            let result = await ${filename}Service.findById({id:id});
-            ctx.body = rsUtil.ok(result);
+            let result = await ${filename}Service.findById(id);
+            ctx.body = RSUtil.ok(result);
         } catch (error) {
             errorUtil.responseError(ctx,error,"查找失败");
         }

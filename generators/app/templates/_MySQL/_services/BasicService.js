@@ -28,6 +28,20 @@ class BasicService {
             }
         });
     }
+
+    /**
+     * 删除
+     * @param {*} object
+     */
+    destroy(id){
+        return Models[this.modelName].destroy({
+            where:{
+                id:id
+            }
+        });
+    }
+
+
     /**
      * 查找所有对象。
      * @param {*} condition 

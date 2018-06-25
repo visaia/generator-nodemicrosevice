@@ -311,12 +311,9 @@ module.exports = class extends Generator {
                 this.templatePath('_MySQL/_createAPI.js'),
                 this.destinationPath('createAPI.js'),
             );
-            this.fs.copyTpl(
+            this.fs.copy(
                 this.templatePath('_MySQL/_api'),
-                this.destinationPath('api'),
-                {
-                    includeWebsocket: this.includeWebsocket,
-                }
+                this.destinationPath('api')
             );
             this.fs.copyTpl(
                 this.templatePath('_MySQL/_bin/'),
