@@ -61,6 +61,7 @@ module.exports = new ${filename}Service();`;
 //生成controller文件
 function createController(api, filename) {
     let tempController = `const ${filename}Service = require('./${filename}Service');
+const errorUtil = require('../../utils/ErrorUtil');
 const RSUtil = require('../../utils/RSUtil');
 const LogUtil = require('../../utils/LogUtil');
 let TimeUtil = require('../../utils/TimeUtil');
