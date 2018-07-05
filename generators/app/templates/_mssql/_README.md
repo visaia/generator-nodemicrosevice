@@ -16,8 +16,8 @@
 - 如果首次使用脚手架安装：
     - 1.`nodejs7.8+`;
     - 2.`npm install -g sequelize-auto`;
-    - 3.`npm install -g mysql`;
-    - 4.`sequelize-auto -h <%= host %> -d <%= database %> -u <%= user %> -x <%= pass %> -p 3306 --dialect mysql`  // 终端输入此命令，将读取数据库，自动生成相应的models
+    - 3.`npm install -g mssql`;
+    - 4.`sequelize-auto -h <%= host %> -d <%= database %> -u <%= user %> -x <%= pass %> -p 1433 --dialect mssql`  // 终端输入此命令，将读取数据库，自动生成相应的models
     - 5.`npm run create`; // 根据models文件夹里的文件，动态生成controller, service, router
     - 6.`npm run start`;
 - 从代码仓库拉取：

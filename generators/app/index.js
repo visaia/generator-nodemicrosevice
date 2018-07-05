@@ -53,6 +53,10 @@ module.exports = class extends Generator {
                     {
                         name: 'MySQL',
                         value: 'choiceMySQL'
+                    },
+                    {
+                        name: 'mssql',
+                        value: 'choicemssql'
                     }
                 ]
             },
@@ -67,7 +71,7 @@ module.exports = class extends Generator {
 
                     return '不能为空';
                 },
-                when: answers => answers.SQL.indexOf('choiceMySQL') !== -1
+                when: answers => answers.SQL.indexOf('choiceMySQL') !== -1 || answers.SQL.indexOf('choicemssql') !== -1
             },
             {
                 type: 'input',
@@ -80,7 +84,7 @@ module.exports = class extends Generator {
 
                     return '不能为空';
                 },
-                when: answers => answers.SQL.indexOf('choiceMySQL') !== -1
+                when: answers => answers.SQL.indexOf('choiceMySQL') !== -1 || answers.SQL.indexOf('choicemssql') !== -1
             },
             {
                 type: 'input',
@@ -93,7 +97,7 @@ module.exports = class extends Generator {
 
                     return '不能为空';
                 },
-                when: answers => answers.SQL.indexOf('choiceMySQL') !== -1
+                when: answers => answers.SQL.indexOf('choiceMySQL') !== -1 || answers.SQL.indexOf('choicemssql') !== -1
             },
             {
                 type: 'input',
@@ -106,7 +110,7 @@ module.exports = class extends Generator {
 
                     return '不能为空';
                 },
-                when: answers => answers.SQL.indexOf('choiceMySQL') !== -1
+                when: answers => answers.SQL.indexOf('choiceMySQL') !== -1 || answers.SQL.indexOf('choicemssql') !== -1
             },
             {
                 type: 'input',
@@ -269,15 +273,18 @@ module.exports = class extends Generator {
                 this.templatePath('_MongoDB/_models'),
                 this.destinationPath('models')
             );
-            this.fs.copy(
+            this.fs.copyTpl(
                 this.templatePath('_MongoDB/_services'),
-                this.destinationPath('services')
+                this.destinationPath('services'),
+                {
+                    includeWebsocket: this.includeWebsocket,
+                }
             );
             this.fs.copy(
                 this.templatePath('_MongoDB/_utils'),
                 this.destinationPath('utils')
             );
-        } else {
+        } else if(this.SQL == 'choiceMySQL'){
             this.fs.copyTpl(
                 this.templatePath('_MySQL/_package.json'),
                 this.destinationPath('package.json'),
@@ -340,12 +347,89 @@ module.exports = class extends Generator {
                 this.templatePath('_MySQL/_models'),
                 this.destinationPath('models')
             );
-            this.fs.copy(
+            this.fs.copyTpl(
                 this.templatePath('_MySQL/_services'),
-                this.destinationPath('services')
+                this.destinationPath('services'),
+                {
+                    includeWebsocket: this.includeWebsocket,
+                }
             );
             this.fs.copy(
                 this.templatePath('_MySQL/_utils'),
+                this.destinationPath('utils')
+            );
+        }else {
+            this.fs.copyTpl(
+                this.templatePath('_mssql/_package.json'),
+                this.destinationPath('package.json'),
+                {
+                    name: this.name,
+                    SQL: this.SQL,
+                    repo: this.repo,
+                    license: this.license,
+                    author: this.author,
+                    description: this.description,
+                    keywords: this.keywords,
+                    includeWebsocket: this.includeWebsocket,
+                    includesidecar: this.includesidecar,
+                }
+            );
+            this.fs.copyTpl(
+                this.templatePath('_mssql/_README.md'),
+                this.destinationPath('README.md'),
+                {
+                    host: this.host,
+                    database: this.database,
+                    user: this.user,
+                    pass: this.pass
+                }
+            );
+            this.fs.copy(
+                this.templatePath('_mssql/_app.js'),
+                this.destinationPath('app.js'),
+            );
+            this.fs.copy(
+                this.templatePath('_mssql/_createAPI.js'),
+                this.destinationPath('createAPI.js'),
+            );
+            this.fs.copy(
+                this.templatePath('_mssql/_api'),
+                this.destinationPath('api')
+            );
+            this.fs.copyTpl(
+                this.templatePath('_mssql/_bin/'),
+                this.destinationPath('bin'),
+                {
+                    includeWebsocket: this.includeWebsocket,
+                }
+            );
+            this.fs.copyTpl(
+                this.templatePath('_mssql/_config'),
+                this.destinationPath('config'),
+                {
+                    host: this.host,
+                    database: this.database,
+                    user: this.user,
+                    pass: this.pass
+                }
+            );
+            this.fs.copy(
+                this.templatePath('_mssql/_sql'),
+                this.destinationPath('sql')
+            );
+            this.fs.copy(
+                this.templatePath('_mssql/_models'),
+                this.destinationPath('models')
+            );
+            this.fs.copyTpl(
+                this.templatePath('_mssql/_services'),
+                this.destinationPath('services'),
+                {
+                    includeWebsocket: this.includeWebsocket,
+                }
+            );
+            this.fs.copy(
+                this.templatePath('_mssql/_utils'),
                 this.destinationPath('utils')
             );
         }
@@ -364,10 +448,10 @@ module.exports = class extends Generator {
                 this.templatePath('_WebSocket/_config/WSConfig.js'),
                 this.destinationPath('config/WSConfig.js')
             );
-            this.fs.copy(
-                this.templatePath('_WebSocket/_services/WSBasicService.js'),
-                this.destinationPath('services/WSBasicService.js')
-            );
+            // this.fs.copy(
+            //     this.templatePath('_WebSocket/_services/WSBasicService.js'),
+            //     this.destinationPath('services/WSBasicService.js')
+            // );
         }
     }
     _writingSidecar() {

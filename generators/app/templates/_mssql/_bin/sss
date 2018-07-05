@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+var io = require('socket.io').listen(9001);
+ io.sockets.on('connection', function (socket) {
+    socket.emit('test', { test: 'test' });
+    socket.on('my other event', function (data) {
+      console.log(data);
+    });
+});

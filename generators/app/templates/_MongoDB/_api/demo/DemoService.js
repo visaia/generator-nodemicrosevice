@@ -1,5 +1,4 @@
-const BasicService = require('../../services/BasicService');<% if(includeWebsocket) { %>
-const WSBasicService = require('../../services/WSBasicService');<% } %>
+const BasicService = require('../../services/BasicService');
 const DemoModel = require('../../models/DemoModel');
 class DemoService extends BasicService{
     constructor(){
