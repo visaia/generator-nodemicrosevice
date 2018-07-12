@@ -1,7 +1,8 @@
 var Models = require('../models/Models');
 var sequelize = require('../config/db').store;
 const logUtil = require('../utils/LogUtil');<% if (includeWebsocket) { %>
-let IListener = require("../ipc/IListener");<% } %>
+let IListener = require("../ipc/IListener");
+const _ = require("lodash");<% } %>
 
 class BasicService {
     constructor(modelName) {
@@ -72,6 +73,55 @@ class BasicService {
             where:where
         });
     }
+
+    /**
+     * 查找最后一条或多条。
+     * where 查询条件（例如：{ type = 3 }） 类型: Object
+     * limit 获取条数（数字） 类型：int
+     * order 排序条件 （以哪个字段进行排序，例如：type 或 time） 类型：string
+     */
+    findLastByOption(where,order,limit){
+        return Models[this.modelName].findAndCountAll({
+            where:where,
+            order:order,
+            limit: limit
+        });
+    }
+
+
+    /**
+     * 求和。
+     * field 求和字段 (value) 类型: string
+     * where 查询条件（例如：{ type = 3 }） 类型: Object
+     */
+    sum(field,where){
+        return Models[this.modelName].sum(field,{
+            where:where
+        });
+    }
+
+    /**
+     * 求统计查询结果数。
+     * field 求和字段 (value) 类型: string
+     * where 查询条件（例如：{ type = 3 }） 类型: Object
+     */
+    count(field,where){
+        return Models[this.modelName].count(field,{
+            where:where
+        });
+    }
+
+    /**
+     * 求平均值。
+     * field 求和字段 (value) 类型: string
+     * where 查询条件（例如：{ type = 3 }） 类型: Object
+     */
+    async average(field,where){
+        let sum = await this.sum(field,where);
+        let count = await this.count(field,where);
+        return sum/count
+    }
+
     /**
      * 分页查询
      * @param {*} params 
