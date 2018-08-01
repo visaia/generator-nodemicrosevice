@@ -1,13 +1,13 @@
 module.exports  =  {
-    dev:{
+    development:{
         ip:         '127.0.0.1',
         port:       '27017',
         name:       'test'
     },
-    product:{
+    production:{
         ip:         '127.0.0.1',
         port:       '27017',
         name:       'test'
     }
-}[process.env.NODE_ENV || 'dev'];
+}[process.env.NODE_ENV || 'development'];
 

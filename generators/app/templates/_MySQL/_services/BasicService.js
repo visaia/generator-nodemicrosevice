@@ -1,12 +1,12 @@
-var Models = require('../models/Models');
+// var Models = require('../models/Models');
 var sequelize = require('../config/db').store;
 const logUtil = require('../utils/LogUtil');<% if (includeWebsocket) { %>
-let IListener = require("../ipc/IListener");
-const _ = require("lodash");<% } %>
+    let IListener = require("../ipc/IListener");
+    const _ = require("lodash");<% } %>
 
 class BasicService {
-    constructor(modelName) {
-        this.modelName = modelName;
+    constructor(model) {
+        this.model = model;
     }
     /**
      * 创建单个对象。
@@ -14,9 +14,9 @@ class BasicService {
      */
     create(object, transaction) {
         if(transaction)
-            return Models[this.modelName].create(object, {transaction:transaction});
+            return this.model.create(object, {transaction:transaction});
         else
-            return Models[this.modelName].create(object);
+            return this.model.create(object);
     }
 
     /**
@@ -25,7 +25,7 @@ class BasicService {
      */
     update(object){
 
-        return Models[this.modelName].update(object,{
+        return this.model.update(object,{
             where:{
                 id:object.id
             }
@@ -37,7 +37,7 @@ class BasicService {
      * @param {*} object
      */
     destroy(id){
-        return Models[this.modelName].destroy({
+        return this.model.destroy({
             where:{
                 id:id
             }
@@ -51,12 +51,12 @@ class BasicService {
      */
     findAll(condition, transaction) {
         if (transaction){
-            return Models[this.modelName].findAll({
+            return this.model.findAll({
                 where:condition,
                 transaction: transaction
             });
         } else {
-            return Models[this.modelName].findAll({
+            return this.model.findAll({
                 where:condition
             });
         }
@@ -64,12 +64,12 @@ class BasicService {
     }
 
     findById(id){
-        return Models[this.modelName].findOne({
+        return this.model.findOne({
             where:{id:id}
         });
     }
     findOne(where){
-        return Models[this.modelName].findOne({
+        return this.model.findOne({
             where:where
         });
     }
@@ -81,7 +81,7 @@ class BasicService {
      * order 排序条件 （以哪个字段进行排序，例如：type 或 time） 类型：string
      */
     findLastByOption(where,order,limit){
-        return Models[this.modelName].findAndCountAll({
+        return this.model.findAndCountAll({
             where:where,
             order:order,
             limit: limit
@@ -95,7 +95,7 @@ class BasicService {
      * where 查询条件（例如：{ type = 3 }） 类型: Object
      */
     sum(field,where){
-        return Models[this.modelName].sum(field,{
+        return this.model.sum(field,{
             where:where
         });
     }
@@ -106,7 +106,7 @@ class BasicService {
      * where 查询条件（例如：{ type = 3 }） 类型: Object
      */
     count(field,where){
-        return Models[this.modelName].count(field,{
+        return this.model.count(field,{
             where:where
         });
     }
@@ -129,7 +129,7 @@ class BasicService {
      * @param {number} pageCount  每一页的个数
      */
     findByPage(params,order,pageNum,pageCount){
-        return Models[this.modelName].findAndCountAll({
+        return this.model.findAndCountAll({
             where:params,
             order:order,
             offset: (pageNum-1)*pageCount,

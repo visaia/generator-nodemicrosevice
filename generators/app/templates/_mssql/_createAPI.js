@@ -47,7 +47,7 @@ const store = db.getStore();
 const ${modelname} = require('../../models/${modelname}')(store, Sequelize);
 class ${filename}Service extends BasicService{
   constructor(){
-    super('${modelname}');
+    super(${modelname});
   }
 }
 module.exports = new ${filename}Service();`;

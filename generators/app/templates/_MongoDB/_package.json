@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node bin/www",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --mode production --progress --colors --display-error-details",
     "url": "<%= repo %>"
   },
   "keywords": [
@@ -36,8 +37,28 @@
     "uuid": "^3.1.0"
   },
   "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-minify-webpack-plugin": "^0.3.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-latest": "^6.22.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "clean-webpack-plugin": "^0.1.19",
+    "gulp": "^3.9.1",
     "mocha": "^3.2.0",
-    "webpack": "^4.2.0"
+    "nodemon": "^1.8.1",
+    "request": "^2.81.0",
+    "uglify-es": "^3.3.9",
+    "uglify-js": "git://github.com/mishoo/UglifyJS2#harmony-v2.8.22",
+    "uglifyjs-webpack-plugin": "^1.2.7",
+    "webpack": "^4.16.1",
+    "webpack-cli": "^3.0.8",
+    "webpack-dev-server": "^3.1.4",
+    "webpack-node-externals": "^1.7.2"
   },
   "license": "<%= license %>"
 }

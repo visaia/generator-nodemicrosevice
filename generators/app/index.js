@@ -319,6 +319,10 @@ module.exports = class extends Generator {
                 this.destinationPath('createAPI.js'),
             );
             this.fs.copy(
+                this.templatePath('_MySQL/_webpack.config.js'),
+                this.destinationPath('webpack.config.js')
+            );
+            this.fs.copy(
                 this.templatePath('_MySQL/_api'),
                 this.destinationPath('api')
             );
@@ -391,6 +395,10 @@ module.exports = class extends Generator {
             this.fs.copy(
                 this.templatePath('_mssql/_createAPI.js'),
                 this.destinationPath('createAPI.js'),
+            );
+            this.fs.copy(
+                this.templatePath('_mssql/_webpack.config.js'),
+                this.destinationPath('webpack.config.js')
             );
             this.fs.copy(
                 this.templatePath('_mssql/_api'),

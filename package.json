@@ -1,6 +1,6 @@
 {
   "name": "generator-nodemicrosevice",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "基于nodemicrosevice的项目目录快速生成器",
   "main": "index.js",
   "scripts": {
